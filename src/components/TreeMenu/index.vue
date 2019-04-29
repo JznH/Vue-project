@@ -1,25 +1,35 @@
 <template>
-  <div class="tree-container normal_height" ref="treeWrap">
+  <div ref="treeWrap" class="tree-container normal_height">
     <div class="title">
-      <span v-html="title"></span>
-      <i class="el-icon-refresh cursor-pointer" @click="refresh"></i>
+      <span v-html="title" />
+      <i class="el-icon-refresh cursor-pointer" @click="refresh" />
     </div>
     <div class="content-wrap">
       <div class="content">
-        <el-input class="filter-text" placeholder="输入关键字进行过滤" v-model="filterText" size="mini">
-        </el-input>
+        <el-input v-model="filterText" class="filter-text" placeholder="输入关键字进行过滤" size="mini" />
       </div>
     </div>
     <el-scrollbar class="el-scrollbar">
       <div class="content-wrap">
         <div class="content">
-          <el-tree class="filter-tree" :props="defaultProps" default-expand-all :filter-node-method="filterNode" ref="tree2" @node-click="handleCheckChange" :data="treeList" :expand-on-click-node="false" v-loading="loading" element-loading-text="加载中" element-loading-spinner="el-icon-loading">
-          </el-tree>
+          <el-tree
+            ref="tree2"
+            v-loading="loading"
+            class="filter-tree"
+            :props="defaultProps"
+            default-expand-all
+            :filter-node-method="filterNode"
+            :data="treeList"
+            :expand-on-click-node="false"
+            element-loading-text="加载中"
+            element-loading-spinner="el-icon-loading"
+            @node-click="handleCheckChange"
+          />
         </div>
       </div>
     </el-scrollbar>
   </div>
-  
+
 </template>
 <script>
 import { getMainHeight } from '@/api/variables'
@@ -60,6 +70,11 @@ export default {
       height: 0
     }
   },
+  watch: {
+    filterText(val) {
+      this.$refs.tree2.filter(val)
+    }
+  },
   mounted() {
     this.resize()
   },
@@ -83,11 +98,6 @@ export default {
       this.setHeight()
       if (!this.isResize) return
       window.addEventListener('resize', this.setHeight)
-    }
-  },
-  watch: {
-    filterText(val) {
-      this.$refs.tree2.filter(val)
     }
   }
 }
