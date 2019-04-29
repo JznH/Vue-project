@@ -3,7 +3,7 @@
     <el-row :gutter="10">
       <el-col :span="4">
         <tree-table
-          :title="'菜单导航树'"
+          :title="'菜单导航树2'"
           :height="tableHeight"
           :tree-list="treeList"
           :loading="treeLoading"
