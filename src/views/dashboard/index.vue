@@ -1,6 +1,10 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
+    <h1>按钮权限测试</h1>
+    <el-button v-has="{permission: 'dashboard:permission:create'}">新增</el-button>
+    <el-button v-has="{permission: 'dashboard:permission:remove'}">删除</el-button>
+    <el-button v-has="{permission: 'dashboard:permission:update'}">修改</el-button>
   </div>
 </template>
 

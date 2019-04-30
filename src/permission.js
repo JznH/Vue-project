@@ -27,24 +27,30 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      // const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      const hasRoles = store.getters.permission_routes.length // 判断是否需要添加路由
       if (hasRoles) {
+        store.commit('permission/SET_BTN_PERMISSION', to.meta.roles || '')
         next()
       } else {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('user/getInfo')
+
+          // const { roles } = await store.dispatch('user/getInfo')
 
           // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          const accessRoutes = await store.dispatch('permission/generateRoutes', [])
+          // const accessRoutes = await store.dispatch('permission/generateRoutes', [])
 
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
 
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
+          store.commit('permission/SET_BTN_PERMISSION', to.meta.roles || '')
           next({ ...to, replace: true })
+          // next()
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

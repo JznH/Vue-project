@@ -20,6 +20,8 @@ import BaseDialog from '@/components/Basedialog/index'
 import TreeSelect from '@/components/TreeSelect/index'
 import { tableHeigh } from '@/api/variables'
 import { getBtnHeigh } from '@/api/variables'
+
+import '@/utils/btn-permission'
 /**
  * If you don't want to use mock-server
  * you want to use mockjs for request interception

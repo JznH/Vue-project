@@ -6,7 +6,7 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  roles: []
+  roles: ['admin']
 }
 
 const mutations = {
@@ -32,6 +32,7 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_NAME', data.name)
         setToken(data.token)
         resolve()
       }).catch(error => {
