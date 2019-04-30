@@ -28,7 +28,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       // const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      const hasRoles = store.getters.permission_routes.length // 判断是否需要添加路由
+      const hasRoles = store.getters.permission_addroutes.length // 判断是否需要添加路由
       if (hasRoles) {
         store.commit('permission/SET_BTN_PERMISSION', to.meta.roles || '')
         next()

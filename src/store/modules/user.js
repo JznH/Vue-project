@@ -1,10 +1,10 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-
+const login_name = 'tnbs_login_name'
 const state = {
   token: getToken(),
-  name: '',
+  name: getToken(login_name),
   avatar: '',
   roles: ['admin']
 }
@@ -33,6 +33,7 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.name)
+        setToken(data.name, login_name)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -74,6 +75,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('permission/SET_ROUTES', [], { root: true })
         removeToken()
         resetRouter()
         resolve()
@@ -86,6 +88,7 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
+      console.log(2333)
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
