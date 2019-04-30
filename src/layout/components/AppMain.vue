@@ -1,36 +1,31 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper">
-    <div :style="{ height : height + 'px' }">
-      <section class="app-main">
-        <transition name="fade" mode="out-in">
-          <router-view :key="key" />
-        </transition>
-      </section>
-    </div>
-  </el-scrollbar>
+  <section class="app-main">
+    <transition name="fade-transform" mode="out-in">
+      <router-view :key="key" />
+    </transition>
+  </section>
 </template>
+
 <script>
 export default {
   name: 'AppMain',
-  data() {
-    return {
-      height: ''
-    }
-  },
   computed: {
     key() {
       return this.$route.fullPath
     }
-  },
-  mounted() {
-    const windowHeight = document.body.clientHeight - 50
-    this.height = windowHeight
   }
 }
 </script>
 
 <style scoped>
-  .fixed-header+.app-main {
-    padding-top: 50px;
-  }
+.app-main {
+  /*50 = navbar  */
+  min-height: calc(100vh - 50px);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.fixed-header+.app-main {
+  padding-top: 50px;
+}
 </style>
