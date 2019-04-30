@@ -97,7 +97,7 @@ export const asyncRoutes = [
       meta: {
         title: '表格',
         icon: 'table',
-        roles: ['admin']
+        roles: 'table:permission:create,table:permission:update'
       }
     },
     {
