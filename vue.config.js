@@ -39,6 +39,13 @@ module.exports = {
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
+      },
+      '/sxyc-admin': {
+        target: `http://192.168.60.109:8080/sxyc-admin`,
+        changeOrigin: true,
+        pathRewrite: {
+          '/sxyc-admin': '/'
+        }
       }
     },
     after: require('./mock/mock-server.js')

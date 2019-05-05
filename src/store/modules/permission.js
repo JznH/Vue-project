@@ -1,16 +1,16 @@
 import { constantRoutes } from '@/router'
 import { getMenu } from '@/api/menu'
+// import { getRoleMenu } from '@/api/menu'
 import Layout from '@/layout'
 
-const _import = (path, fn) => {
+const _import = (path, callback) => {
   import(`@/views${path}/index.vue`).then(res => {
-    fn(res.default)
+    callback && callback(res.default)
   })
 }
 /**
- * Filter asynchronous routing tables by recursion
+ * Filter asynchronous routing tables
  * @param routes asyncRoutes
- * @param roles
  */
 export function filterAsyncRoutes(routes) {
   const res = []
@@ -55,8 +55,9 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }) {
     return new Promise(resolve => {
+      // getRoleMenu().then(res => console.log(res))
       const accessedRoutes = filterAsyncRoutes(getMenu)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
