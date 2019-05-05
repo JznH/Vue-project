@@ -9,6 +9,24 @@ export function getRoleMenu() {
 }
 export const getMenu = [
   {
+    path: '/admin',
+    name: 'admin',
+    meta: {
+      title: '平台管理',
+      icon: 'example'
+    },
+    children: [{
+      path: 'menu',
+      name: 'menu',
+      meta: {
+        title: '菜单管理',
+        icon: 'table',
+        roles: '',
+        component: '/admin/menu'
+      }
+    }]
+  },
+  {
     path: '/example',
     name: 'Example',
     meta: {
@@ -18,7 +36,6 @@ export const getMenu = [
     children: [{
       path: 'table-demo',
       name: 'table-demo',
-
       meta: {
         title: '表格',
         icon: 'table',
@@ -61,8 +78,6 @@ export const getMenu = [
 
   {
     path: '/nested',
-
-    redirect: '/nested/menu1',
     name: 'Nested',
     meta: {
       title: 'Nested',
@@ -132,7 +147,6 @@ export const getMenu = [
 
   {
     path: '/sys',
-    redirect: '/sys/sys-user',
     name: 'System',
     meta: {
       title: '平台管理',

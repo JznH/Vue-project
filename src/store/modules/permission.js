@@ -1,6 +1,6 @@
 import { constantRoutes } from '@/router'
 import { getMenu } from '@/api/menu'
-// import { getRoleMenu } from '@/api/menu'
+import { getRoleMenu } from '@/api/menu'
 import Layout from '@/layout'
 
 const _import = (path, callback) => {
@@ -57,7 +57,7 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }) {
     return new Promise(resolve => {
-      // getRoleMenu().then(res => console.log(res))
+      getRoleMenu().then(res => console.log(res))
       const accessedRoutes = filterAsyncRoutes(getMenu)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
