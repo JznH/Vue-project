@@ -1,4 +1,12 @@
+import request from '@/utils/request'
 
+export function getRoleMenu() {
+  return request({
+    url: '/sxyc-admin/interface/user/getRoleMenu',
+    method: 'get',
+    params: { loginname: 's001' }
+  })
+}
 export const getMenu = [
   {
     path: '/example',
