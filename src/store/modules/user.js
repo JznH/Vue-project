@@ -6,7 +6,7 @@ const state = {
   token: getToken(),
   name: getToken(login_name),
   avatar: '',
-  roles: ['admin']
+  roles: []
 }
 
 const mutations = {
@@ -88,7 +88,6 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      console.log(2333)
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
