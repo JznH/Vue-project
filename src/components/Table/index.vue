@@ -102,7 +102,7 @@ export default {
     font-size: 12px!important;
     border-radius: 3px;
     margin-bottom: 10px;
-    overflow-y: hidden;
+    overflow: hidden;
     &.main-table-hasborder {
       border: 1px solid $table-border-color;
       .slide-table-content {

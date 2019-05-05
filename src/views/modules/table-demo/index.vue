@@ -1,7 +1,7 @@
 <template>
   <div>
     <main-table :title="'应用列表'">
-      <div slot="all-area">
+      <template v-slot:all-area>
         <el-form ref="formInline" :inline="true" :model="formInline" class="form-inline" size="mini">
           <el-form-item label="选择时间" prop="time">
             <el-date-picker
@@ -45,12 +45,12 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </div>
-      <div slot="right-area">
+      </template>
+      <template v-slot:right-area>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="formSearch()">查询</el-button>
         <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetForm('formInline')">重置</el-button>
-      </div>
-      <div slot="left-area">
+      </template>
+      <template v-slot:left-area>
         <el-button-group>
           <el-button type="primary" size="mini" @click="handleAdd">新增</el-button>
           <el-button type="primary" size="mini" @click="changeEdit">编辑</el-button>
@@ -61,8 +61,8 @@
           <el-button type="primary" size="mini">移库</el-button>
           <el-button type="primary" size="mini">撤回</el-button>
         </el-button-group>
-      </div>
-      <div slot="table">
+      </template>
+      <template v-slot:table>
         <el-table
           ref="multipleTable"
           v-loading="listLoading"
@@ -121,46 +121,52 @@
           </el-table-column>
         </el-table>
         <pagi-nation :total="total" @pageSizeChange="getRows" @currentPage="getPage" @paginationRfresh="getRfresh" />
-      </div>
+      </template>
     </main-table>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="editObj" :inline="true" size="small" :model="editObj" :rules="editObjRules" label-width="80px">
-        <el-form-item label="批文文号" prop="transFileno">
-          <el-input v-model="editObj.transFileno" auto-complete="off" />
-        </el-form-item>
+        <el-col :span="12">
+          <el-form-item label="批文文号" prop="transFileno">
+            <el-input v-model="editObj.transFileno" auto-complete="off" />
+          </el-form-item>
+        </el-col>
         <el-form-item label="批文名称" prop="transFilename">
           <el-input v-model="editObj.transFilename" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="批文类型" prop="transType">
-          <el-select v-model="editObj.transType" placeholder="类型选择">
-            <el-option label="农网工程" value="1" />
-            <el-option label="城网工程" value="2" />
-            <el-option label="机井通电工程" value="3" />
-          </el-select>
-        </el-form-item>
+        <el-col :span="12">
+          <el-form-item label="批文类型" prop="transType">
+            <el-select v-model="editObj.transType" placeholder="类型选择">
+              <el-option label="农网工程" value="1" />
+              <el-option label="城网工程" value="2" />
+              <el-option label="机井通电工程" value="3" />
+            </el-select>
+          </el-form-item>
+        </el-col>
         <el-form-item label="批次年度" prop="transYear">
           <el-input v-model="editObj.transYear" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="下达时间" prop="tranDate">
-          <el-date-picker
-            v-model="editObj.tranDate"
-            style="width:199px;"
-            type="date"
-            placeholder="选择日期"
-          />
-        </el-form-item>
+        <el-col :span="12">
+          <el-form-item label="下达时间" prop="tranDate">
+            <el-date-picker
+              v-model="editObj.tranDate"
+              type="date"
+              placeholder="选择日期"
+            />
+          </el-form-item>
+        </el-col>
         <el-form-item label="工程数量" prop="engCount">
           <el-input v-model="editObj.engCount" auto-complete="off" />
         </el-form-item>
-        <el-form-item label="创建时间" prop="createDate">
-          <el-date-picker
-            v-model="editObj.createDate"
-            style="width:199px;"
-            type="date"
-            :disabled="true"
-            placeholder="选择日期"
-          />
-        </el-form-item>
+        <el-col :span="12">
+          <el-form-item label="创建时间" prop="createDate">
+            <el-date-picker
+              v-model="editObj.createDate"
+              type="date"
+              :disabled="true"
+              placeholder="选择日期"
+            />
+          </el-form-item>
+        </el-col>
         <el-form-item label="归属机构" prop="createName">
           <tree-select
             v-model="editObj.createName"
@@ -291,9 +297,11 @@ export default {
       console.log(this.formInline)
     },
     popoverHide(checkedIds, checkedData) {
-      console.log(checkedIds)
-      console.log(checkedData.menuName)
-      this.editObj.createName = checkedData.menuName
+      if (checkedData) {
+        console.log(checkedIds)
+        console.log(checkedData.menuName)
+        this.editObj.createName = checkedData.menuName
+      }
     },
     // 获取数据
     fetchData() {

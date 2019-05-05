@@ -25,7 +25,7 @@
 
 .el-dialog__body {
   height: 50vh;
-  //overflow: auto;
+  overflow-y: auto;
 }
 
 .el-date-editor .el-range-separator {

@@ -109,6 +109,15 @@ export const asyncRoutes = [
         icon: 'table',
         roles: ['admin']
       }
+    }, {
+      path: 'vue-swiper',
+      name: 'vue-swiper',
+      component: () => import('@/views/modules/vue-swiper/index'),
+      meta: {
+        title: '图片预览',
+        icon: 'table',
+        roles: ['admin']
+      }
     },
     {
       path: 'tree',
