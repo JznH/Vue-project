@@ -131,7 +131,7 @@ export default {
     .slide-table-content {
       .btn-row {
         overflow: hidden;
-        padding: 14px 0 0;
+        padding: 12px 0 0;
         border-bottom: 1px solid $table-border-color;
         .row {
           &>div:not(:nth-of-type(1)) {
@@ -140,7 +140,7 @@ export default {
         }
       }
       .el-row {
-        padding-bottom:14px;
+        padding-bottom:12px;
       }
     }
   }

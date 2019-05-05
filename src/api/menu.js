@@ -28,6 +28,16 @@ export const getMenu = [
         icon: 'table'
 
       }
+    }, {
+      path: 'vue-swiper',
+      name: 'vue-swiper',
+
+      meta: {
+        title: '图片预览',
+        component: '/modules/vue-swiper',
+        icon: 'table'
+
+      }
     },
     {
       path: 'tree',
