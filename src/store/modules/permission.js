@@ -1,13 +1,17 @@
-import { constantRoutes } from '@/router'
 // import { getMenu } from '@/api/menu'
 import { getRoleMenu } from '@/api/menu'
 import Layout from '@/layout'
+import { constantRoutes } from '@/router'
 
 const _import = (path, callback) => {
   import(`@/views${path.replace(/\'+/g, '')}/index.vue`).then(res => {
     callback && callback(res.default)
   })
 }
+/**
+ * 生成符合vue-router格式的数据
+ * @param {*} route
+ */
 const createMenuPath = (route) => {
   route.path = route.href
   if (route.meta) {
@@ -16,6 +20,11 @@ const createMenuPath = (route) => {
   }
   return route
 }
+/**
+ * 生成路由
+ * @param {*} tmp router item
+ * @param {*} islev1 是否为根目录
+ */
 const getChildren = (tmp, islev1 = true) => {
   var data = tmp.children
   if (!data) return
