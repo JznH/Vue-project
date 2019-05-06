@@ -28,8 +28,17 @@ export function getInfo(token) {
 }
 
 export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
+  // return request({
+  //   url: '/user/logout',
+  //   method: 'post'
+  // })
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        data: {
+          state: 'true'
+        }
+      })
+    }, 500)
   })
 }

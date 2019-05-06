@@ -40,11 +40,11 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      '/sxyc-admin': {
-        target: `http://192.168.60.109:8080/sxyc-admin`,
+      '/interface': {
+        target: `http://192.168.60.109:8080/sxyc-admin/interface`,
         changeOrigin: true,
         pathRewrite: {
-          '/sxyc-admin': '/'
+          '/interface': '/'
         }
       }
     },

@@ -30,7 +30,7 @@ router.beforeEach(async(to, from, next) => {
       // const hasRoles = store.getters.roles && store.getters.roles.length > 0
       const hasRoles = store.getters.permission_addroutes.length // 判断是否需要添加路由
       if (hasRoles) {
-        store.commit('permission/SET_BTN_PERMISSION', to.meta.roles || '')
+        store.commit('permission/SET_BTN_PERMISSION', to.meta.permission || '')
         next()
       } else {
         try {

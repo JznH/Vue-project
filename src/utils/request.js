@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import qs from 'qs'
+import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
@@ -14,7 +15,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-
+    if (config.method === 'post') {
+      config.data = qs.stringify(config.data)
+    }
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
@@ -47,31 +50,32 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     // if (res.code !== 20000) {
-    if (res.state !== 'true') {
-      if (res.code === 20000) return res
-      Message({
-        message: res.message || 'error',
-        type: 'error',
-        duration: 5 * 1000
-      })
+    return res
+    // if (res.state !== 'true') {
+    //   if (res.code === 20000) return res
+    //   Message({
+    //     message: res.message || 'error',
+    //     type: 'error',
+    //     duration: 5 * 1000
+    //   })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(res.message || 'error')
-    } else {
-      return res
-    }
+    //   // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
+    //   if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+    //     // to re-login
+    //     MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+    //       confirmButtonText: 'Re-Login',
+    //       cancelButtonText: 'Cancel',
+    //       type: 'warning'
+    //     }).then(() => {
+    //       store.dispatch('user/resetToken').then(() => {
+    //         location.reload()
+    //       })
+    //     })
+    //   }
+    //   return Promise.reject(res.message || 'error')
+    // } else {
+    //   return res
+    // }
   },
   error => {
     console.log('err' + error) // for debug

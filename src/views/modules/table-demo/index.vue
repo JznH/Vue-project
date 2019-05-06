@@ -52,12 +52,12 @@
       </template>
       <template v-slot:left-area>
         <el-button-group>
-          <el-button v-has="{permission: 'table:permission:create'}" type="primary" size="mini" @click="handleAdd">新增</el-button>
-          <el-button type="primary" size="mini" @click="changeEdit">编辑</el-button>
-          <el-button type="primary" size="mini" @click="changeDel">删除</el-button>
+          <el-button v-has="{permission:'table:create'}" type="primary" size="mini" @click="handleAdd">新增</el-button>
+          <el-button v-has="{permission:'table:edit'}" type="primary" size="mini" @click="changeEdit">编辑</el-button>
+          <el-button v-has="{permission:'table:remove'}" type="primary" size="mini" @click="changeDel">删除</el-button>
           <el-button type="primary" size="mini" :disabled="multipleSelection.length===0">批量删除</el-button>
           <el-button type="primary" size="mini">导入</el-button>
-          <el-button v-has="{permission: 'table:permission:export'}" type="primary" size="mini">导出</el-button>
+          <el-button type="primary" size="mini">导出</el-button>
           <el-button type="primary" size="mini">移库</el-button>
           <el-button type="primary" size="mini">撤回</el-button>
         </el-button-group>
@@ -94,7 +94,7 @@
                   class="underline"
                   :to="{
                     // path: '/example/table',
-                    name: 'sys-user',
+                    name: '/sysindex/sys-user',
                     query: {
                       id: scope.row.transFileno,
                       name: scope.row.createName

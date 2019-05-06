@@ -46,6 +46,9 @@
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
+        <div>
+          权限测试账号：'s001', 'test_sg'
+        </div>
       </div>
 
     </el-form>

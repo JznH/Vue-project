@@ -106,7 +106,7 @@
                       class="underline"
                       :to="{
                         path: '/example/table',
-                        name: 'Table',
+                        name: '/modules/table-demo',
                         query: {
                           id: scope.row.transFileno
                         },

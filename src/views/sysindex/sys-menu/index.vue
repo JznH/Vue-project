@@ -39,8 +39,6 @@
               ref="multipleTable"
               v-loading="listLoading"
               :data="list"
-              element-loading-text="加载中"
-              element-loading-spinner="el-icon-loading"
               highlight-current-row
               :height="tableHeight"
               :default-sort="{prop: 'date', order: 'descending'}"
@@ -49,41 +47,16 @@
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="35" />
-              <el-table-column v-if="show" prop="transFileno" label="id" />
-              <el-table-column prop="transFileno" label="批文文号" show-overflow-tooltip />
-              <el-table-column prop="transFilename" label="批文名称" />
-              <el-table-column
-                prop="transType"
-                label="批文类型"
-                width="120"
-                :filters="[{ text: '农网工程', value: '农网工程' }, { text: '城网工程', value: '城网工程' }, { text: '机井通电工程', value: '机井通电工程' }]"
-                :filter-method="filterHandler"
-              />
-              <el-table-column label="批次年度" width="100">
+              <el-table-column label="类型" width="140">
                 <template slot-scope="scope">
-                  <el-tooltip content="点击查看详情" placement="right">
-                    <router-link
-                      class="underline"
-                      :to="{
-                        path: '/example/table',
-                        name: 'Table',
-                        query: {
-                          id: scope.row.transFileno
-                        },
-                        params: {
-                          title: scope.row.transFilename+' - '+scope.row.transYear,
-                          name: scope.row.createName
-                        }
-                      }"
-                    >{{ scope.row.transYear }}</router-link>
-                  </el-tooltip>
+                  <span>{{ !scope.row.permission  ? '菜单' : '按钮'}}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="tranDate" label="批次下达时间" width="130" sortable />
-              <el-table-column prop="engCount" label="工程数量" width="100" />
-              <el-table-column prop="createName" label="创建者" width="100" />
-              <el-table-column prop="createDate" label="创建时间" width="100" />
-              <el-table-column prop="remark" label="备注" show-overflow-tooltip />
+              <el-table-column prop="name" label="菜单名称" show-overflow-tooltip fixed width="150" />
+              <el-table-column prop="permission" label="权限标识" show-overflow-tooltip fixed width="150" />
+              <el-table-column prop="id" label="id" show-overflow-tooltip fixed width="250" />
+              <el-table-column prop="href" label="访问地址" show-overflow-tooltip fixed width="150" />
+              <el-table-column prop="createtime" label="创建时间" fixed width="150" />
               <el-table-column label="操作" width="140">
                 <template slot-scope="scope">
                   <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -95,50 +68,163 @@
           </div>
         </main-table>
         <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-          <el-form ref="editObj" :inline="true" size="small" :model="editObj" :rules="editObjRules" label-width="80px">
-            <el-form-item label="批文文号" prop="transFileno">
-              <el-input v-model="editObj.transFileno" auto-complete="off" />
+          <div>
+            <label for="">新增类型</label>
+            <el-select
+              v-model="add.type"
+              size="small"
+              placeholder=""
+              style="width: 100px;margin-bottom: 12px"
+            >
+              <el-option
+                label="菜单"
+                value="1"
+              />
+              <el-option
+                label="按钮"
+                value="2"
+              />
+            </el-select>
+          </div>
+          <!-- 新增菜单 -->
+          <el-form
+            v-show="add.type==='1'"
+            ref="addmenu"
+            :model="add.menu"
+            :rules="rules"
+            size="small"
+            :inline="true"
+            label-width="100px"
+            class="demo-ruleForm"
+          >
+            <el-form-item
+              label="名称"
+              prop="name"
+              required
+            >
+              <el-input v-model="add.menu.name" />
             </el-form-item>
-            <el-form-item label="批文名称" prop="transFilename">
-              <el-input v-model="editObj.transFilename" auto-complete="off" />
+            <el-form-item
+              label="上级菜单"
+              prop="parentids"
+              required
+            >
+              <el-input v-model="add.menu.parentids" />
             </el-form-item>
-            <el-form-item label="批文类型" prop="transType">
-              <el-select v-model="editObj.transType" placeholder="类型选择">
-                <el-option label="农网工程" value="1" />
-                <el-option label="城网工程" value="2" />
-                <el-option label="机井通电工程" value="3" />
+            <el-form-item
+
+              label="访问地址"
+              prop="href"
+            >
+              <el-input v-model="add.menu.href" />
+            </el-form-item>
+            <el-form-item
+              label="页面地址"
+              prop="target"
+            >
+              <el-input v-model="add.menu.target" />
+            </el-form-item>
+            <el-form-item
+              label="跨域地址"
+              prop="treehref"
+            >
+              <el-input v-model="add.menu.treehref" />
+            </el-form-item>
+            <el-form-item
+              label="显示图标"
+              prop="icon"
+            >
+              <el-input v-model="add.menu.icon" />
+            </el-form-item>
+            <el-form-item
+
+              label="是否显示"
+              prop="showflag"
+            >
+              <el-select
+                v-model="add.menu.showflag"
+                placeholder=""
+              >
+                <el-option
+                  label="显示"
+                  value="1"
+                />
+                <el-option
+                  label="隐藏"
+                  value="2"
+                />
               </el-select>
             </el-form-item>
-            <el-form-item label="批次年度" prop="transYear">
-              <el-input v-model="editObj.transYear" auto-complete="off" />
+            <el-form-item
+              label="排序"
+              prop="orderno"
+              required
+            >
+              <el-input v-model="add.menu.orderno" />
             </el-form-item>
-            <el-form-item label="下达时间" prop="tranDate">
-              <el-date-picker
-                v-model="editObj.tranDate"
-                style="width:199px;"
-                type="date"
-                placeholder="选择日期"
-              />
+            <el-form-item
+              label="说明"
+              prop="remarks"
+            >
+              <el-input v-model="add.menu.remarks" />
             </el-form-item>
-            <el-form-item label="工程数量" prop="engCount">
-              <el-input v-model="editObj.engCount" auto-complete="off" />
+          </el-form>
+          <!-- 新增按钮 -->
+          <el-form
+            v-show="add.type==='2'"
+            ref="addbtn"
+            :model="add.menu"
+            :rules="rules"
+            size="small"
+            :inline="true"
+            label-width="100px"
+            class="demo-ruleForm"
+          >
+
+            <el-form-item
+              label="名称"
+              prop="name"
+              required
+            >
+              <el-input v-model="add.btn.name" />
             </el-form-item>
-            <el-form-item label="创建时间" prop="createDate">
-              <el-date-picker
-                v-model="editObj.createDate"
-                style="width:199px;"
-                type="date"
-                :disabled="true"
-                placeholder="选择日期"
-              />
+            <el-form-item
+              label="上级菜单"
+              prop="parentids"
+              required
+            >
+              <el-input v-model="add.btn.parentids" />
             </el-form-item>
-            <el-form-item label="备注" style="width:100%;" prop="remark">
-              <el-input v-model="editObj.remark" type="textarea" :rows="3" style="width:400px" />
+            <el-form-item
+              label="显示图标"
+              prop="icon"
+            >
+              <el-input v-model="add.btn.icon" />
+            </el-form-item>
+            <el-form-item
+              label="访问权限"
+              required
+              prop="permission"
+            >
+              <el-input v-model="add.btn.roles" />
+            </el-form-item>
+            <el-form-item
+              label="排序"
+              prop="orderno"
+              required
+            >
+              <el-input v-model="add.btn.orderno" />
+            </el-form-item>
+            <el-form-item
+              label="说明"
+              prop="remarks"
+            >
+              <el-input v-model="add.btn.remarks" />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
-            <el-button size="small" type="primary" @click="dialogStatus==='create'?createData():updateData()">确定</el-button>
+            <el-button size="small" type="primary" @click="menuCreate">确定</el-button>
           </div>
         </el-dialog>
       </el-col>
@@ -180,19 +266,26 @@ export default {
         create: '新增'
       },
       dialogFormVisible: false,
-      listLoading: true, // 默认加载
+      listLoading: false, // 默认加载
       list: [], // 表格数据
       multipleSelection: [], // 选中项数据
       total: 0, // 分页总数
-      editObj: {
-        transFileno: '',
-        transFilename: '',
-        transType: '',
-        transYear: '',
-        tranDate: '',
-        engCount: '',
-        createDate: new Date()
+      add: {
+        type: '1',
+        menu: {
+          showflag: '1',
+          parentid: '00'
+        },
+        btn: {
+          showflag: '1',
+          parentid: '00'
+        }
       },
+      page: {
+        rows: 10,
+        page: 1
+      },
+      rules: {},
       editObjRules: {
         transFileno: [{ required: true, message: '请输入批文文号', trigger: 'blur' }]
       }
@@ -206,6 +299,18 @@ export default {
     this.tableHeight = this.$tableHeigh()
   },
   methods: {
+    fetchData() {
+      this.listLoading = true
+      this.$http({
+        url: '/interface/menu/page',
+        method: 'get',
+        params: this.page
+      }).then(res => {
+        this.listLoading = false
+        this.list = res.rows
+        this.total = res.total | 0
+      })
+    },
     formSearch() {
       console.log(this.formInline)
     },
@@ -223,15 +328,6 @@ export default {
     onRefresTree() {
       this.treeData()
     },
-    // 获取数据
-    fetchData() {
-      this.listLoading = true
-      getTableList(this.listQuery).then(response => {
-        this.list = response.date.items
-        this.total = response.total
-        this.listLoading = false
-      })
-    },
     // 把每一行的索引放进row
     tableRowClassName({ row, rowIndex }) {
       row.index = rowIndex
@@ -248,21 +344,16 @@ export default {
     },
     // 分页
     getRows(val) {
-      this.rows = val
+      this.page.rows = val
       this.fetchData()
     },
     getPage(val) {
-      this.page = val
+      this.page.page = val
       this.fetchData()
     },
     // 刷新
     getRfresh() {
       this.fetchData()
-    },
-    // 关闭弹窗
-    editDialogClose() {
-      this.dialogFormVisible = false
-      this.$refs['editObj'].clearValidate()
     },
     // 重置
     resetForm(formName) {
@@ -384,7 +475,28 @@ export default {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['editObj'].clearValidate()
+        this.$refs['addmenu'].clearValidate()
+        this.$refs['addbtn'].clearValidate()
+      })
+    },
+    menuCreate() {
+      const type = this.add.type
+      const formName = type === '1' ? 'addmenu' : 'addbtn'
+      this.$refs[formName].validate(valid => {
+        const data = type === '1' ? { ...this.add.menu } : { ...this.add.btn }
+        data.appid = 'e9a3eb64e6c111e7a2c6450140ea936c'
+        if (valid) {
+          this.$http({
+            url: '/interface/menu/create',
+            method: 'post',
+            data
+          }).then(res => {
+            console.log(res, 233)
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     }
   }

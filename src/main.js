@@ -23,6 +23,8 @@ import TreeSelect from '@/components/TreeSelect/index'
 import { tableHeigh } from '@/api/variables'
 import { getBtnHeigh } from '@/api/variables'
 
+import request from '@/utils/request'
+
 import '@/utils/btn-permission'
 /**
  * If you don't want to use mock-server
@@ -64,6 +66,7 @@ Viewer.setDefaults({
 Vue.config.productionTip = false
 Vue.prototype.$tableHeigh = tableHeigh
 Vue.prototype.$getBtnHeigh = getBtnHeigh
+Vue.prototype.$http = request
 
 new Vue({
   el: '#app',

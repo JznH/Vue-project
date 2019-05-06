@@ -1,39 +1,59 @@
 import { constantRoutes } from '@/router'
-import { getMenu } from '@/api/menu'
+// import { getMenu } from '@/api/menu'
 import { getRoleMenu } from '@/api/menu'
 import Layout from '@/layout'
 
 const _import = (path, callback) => {
-  import(`@/views${path}/index.vue`).then(res => {
+  import(`@/views${path.replace(/\'+/g, '')}/index.vue`).then(res => {
     callback && callback(res.default)
   })
+}
+const createMenuPath = (route) => {
+  route.path = route.href
+  if (route.meta) {
+    route.meta.title = route.meta.name
+    route.name = route.meta.target || route.path
+  }
+  return route
+}
+const getChildren = (tmp, islev1 = true) => {
+  var data = tmp.children
+  if (!data) return
+  data.forEach((itemMenu, i) => {
+    const child = createMenuPath(itemMenu)
+    const childrenComponentPath = (child.meta && child.meta.target) || ''
+    if (i === 0 && islev1 === true) {
+      tmp.redirect = tmp.path + '/' + child.path
+    }
+    if (childrenComponentPath) {
+      _import(childrenComponentPath, (res) => {
+        child['component'] = res
+      })
+    }
+    if (child.children && child.children.length) child.children = getChildren(child.children, false)
+  })
+  return tmp
 }
 /**
  * Filter asynchronous routing tables
  * @param routes asyncRoutes
  */
-export function filterAsyncRoutes(routes) {
+export function filterAsyncRoutes(routes = []) {
   const res = []
   routes.forEach(route => {
-    const tmp = { ...route }
-    const getChildren = (data, islev1 = true) => {
-      if (!data) return
-      data.forEach((child, i) => {
-        const childrenComponentPath = (child.meta && child.meta.component) || ''
-        if (i === 0 && islev1 === true) {
-          tmp.redirect = tmp.path + '/' + child.path
-        }
-        if (childrenComponentPath) {
-          _import(childrenComponentPath, (res) => {
-            child['component'] = res
-          })
-        }
-        if (child.children && child.children.length) getChildren(child.children, false)
-      })
-    }
+    const tmp = createMenuPath(route)
+    const childrenRoute = getChildren(tmp)
     tmp.component = Layout
-    getChildren(tmp.children)
-    res.push(tmp)
+    if (childrenRoute) {
+      res.push(getChildren(tmp))
+    } else {
+      res.push(tmp)
+    }
+  })
+  res.push({
+    path: '*',
+    redirect: '/404',
+    hidden: true
   })
   return res
 }
@@ -55,12 +75,16 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }) {
+  generateRoutes({ rootState, commit }) {
     return new Promise(resolve => {
-      getRoleMenu().then(res => console.log(res))
-      const accessedRoutes = filterAsyncRoutes(getMenu)
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      getRoleMenu({ loginname: rootState.user.name }).then(res => {
+        const accessedRoutes = filterAsyncRoutes(res.data)
+        commit('SET_ROUTES', accessedRoutes)
+        resolve(accessedRoutes)
+      })
+      // const accessedRoutes = filterAsyncRoutes(getMenu)
+      // commit('SET_ROUTES', accessedRoutes)
+      // resolve(accessedRoutes)
     })
   }
 }
